@@ -11,4 +11,10 @@
     <string name="pria">Pria</string>
     <string name="wanita">Wanita</string>
     <string name="input_invalid">Tidak Boleh Kosong</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="copyright">Hitung Kalori adalah aplikasi Android untuk
+        menghitung kebutuhan kalori harian berdasarkan usia, jenis kelamin,
+        berat badan, tinggi badan, dan aktivitas. Aplikasi ini dibuat untuk kelas Pemrograman Perangkat Bergerak 1.\n\nAplikasi ini dibuat untuk Mini Project 1 kelas
+        Pemrograman untuk Perangkat Bergerak 1.\n\nCopyright © 2024-2025 Angel Levyne.\n
+         All rights reserved</string>
 </resources>
