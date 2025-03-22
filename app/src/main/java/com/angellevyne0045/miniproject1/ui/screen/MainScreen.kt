@@ -1,10 +1,8 @@
 package com.angellevyne0045.miniproject1.ui.screen
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,11 +14,15 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -31,13 +33,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
@@ -69,10 +71,15 @@ fun MainScreen(){
 
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    var kalori by remember { mutableStateOf("") }
     var usia by remember { mutableStateOf("") }
+    var usiaError by remember { mutableStateOf(false) }
+
     var berat by remember { mutableStateOf("") }
+    var beratError by remember { mutableStateOf(false) }
+
     var tinggi by remember { mutableStateOf("") }
+    var tinggiError by remember { mutableStateOf(false) }
+
 
 
     val radioOptions = listOf(
@@ -80,6 +87,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         stringResource(id = R.string.wanita)
     )
     var gender by remember { mutableStateOf(radioOptions[0]) }
+
+    var bmr by remember { mutableFloatStateOf(0f) }
+//    var kategori by remember { mutableIntStateOf(0) }
+
+    var selectedText by remember { mutableStateOf("Tidak Aktif") }
+
 
     Column(
         modifier = modifier
@@ -94,15 +107,17 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.fillMaxWidth()
         )
-        tujuan()
-
-
+        Tujuan(
+            selectedText = selectedText,
+            onTextSelected = { selectedText = it }
+        )
         OutlinedTextField(
-            value = kalori,
-            onValueChange = { kalori = it },
+            value = usia,
+            onValueChange = { usia = it },
             label = { Text(text = stringResource(R.string.usia)) },
-            trailingIcon = { Text(text = "Tahun",
-                modifier = Modifier.padding(20.dp)) },
+            trailingIcon = { IconPicker(usiaError, "Tahun") },
+            supportingText = { ErrorHint(usiaError) },
+            isError = usiaError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -111,11 +126,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
-            value = kalori,
-            onValueChange = { kalori = it },
+            value = berat,
+            onValueChange = { berat = it },
             label = { Text(text = stringResource(R.string.berat_badan)) },
-            trailingIcon = { Text(text = "Kg",
-                modifier = Modifier.padding(20.dp)) },
+            trailingIcon = { IconPicker(beratError, "Kg") },
+            supportingText = { ErrorHint(beratError) },
+            isError = beratError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -124,11 +140,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
-            value = kalori,
-            onValueChange = { kalori = it },
+            value = tinggi,
+            onValueChange = { tinggi = it },
             label = { Text(text = stringResource(R.string.tinggi_badan)) },
-            trailingIcon = { Text(text = "Cm",
-                modifier = Modifier.padding(20.dp)) },
+            trailingIcon = { IconPicker(tinggiError, "Cm") },
+            supportingText = { ErrorHint(tinggiError) },
+            isError = tinggiError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -157,12 +174,37 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             }
         }
         Button(
-            onClick = {},
+            onClick = {
+                usiaError = (usia == "" || usia == "0")
+                beratError = (berat == "" || berat == "0")
+                tinggiError = (tinggi == "" || tinggi == "0")
+                if (beratError || tinggiError || usiaError) return@Button
+
+                bmr = hitungKalori(
+                    usia = usia.toFloat(),
+                    berat = berat.toFloat(),
+                    tinggi = tinggi.toFloat(),
+                    isMale = gender == radioOptions[0],
+                    aktivitas = selectedText
+                )
+            },
             modifier = Modifier.padding(top = 8.dp),
             contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
         ) {
             Text(text = stringResource(R.string.hitung))
         }
+        if (bmr != 0f) {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
+            Text(
+                text = stringResource(R.string.bmr, bmr),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+
     }
 }
 
@@ -181,15 +223,46 @@ fun GenderOption(label: String, isSelected: Boolean, modifier: Modifier) {
     }
 }
 
+@Composable
+fun IconPicker (isError: Boolean, unit: String) {
+    if (isError) {
+        Icon(imageVector = Icons.Filled.Warning, contentDescription = null)
+    } else {
+        Text(text = unit)
+    }
+}
+
+@Composable
+fun ErrorHint(isError: Boolean) {
+    if (isError) {
+        Text(text = stringResource(R.string.input_invalid))
+    }
+}
+
+private fun hitungKalori(usia: Float, berat: Float, tinggi: Float, isMale: Boolean, aktivitas: String): Float {
+    val bmr = if (isMale) {
+        66 + (13.7f * berat) + (5f * tinggi) - (6.8f * usia)
+    } else {
+        655 + (9.6f * berat) + (1.8f * tinggi) - (4.7f * usia)
+    }
+
+    val faktorAktivitas = when (aktivitas) {
+        "Tidak Aktif" -> 1.2f
+        "Aktivitas Ringan" -> 1.375f
+        "Aktivitas Sedang" -> 1.55f
+        "Aktivitas Sangat Berat" -> 1.9f
+        else -> 1.2f
+    }
+    return bmr * faktorAktivitas
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun tujuan(){
-    val list = listOf("Menambah Berat Badan","Menjaga Berat Badan", "Menurunkan Berat Badan")
-
-    var selectedText by remember { mutableStateOf(list[0]) }
+fun Tujuan(selectedText: String, onTextSelected: (String) -> Unit) {
+    val list = listOf("Tidak Aktif", "Aktivitas Ringan", "Aktivitas Sedang", "Aktivitas Berat")
     var isExpanded by remember { mutableStateOf(false) }
-    Column (
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
@@ -208,11 +281,11 @@ fun tujuan(){
             )
 
             ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
-                list.forEachIndexed { index, text ->
+                list.forEachIndexed { _, text ->
                     DropdownMenuItem(
                         text = { Text(text = text) },
                         onClick = {
-                            selectedText = list[index]
+                            onTextSelected(text)
                             isExpanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -222,6 +295,7 @@ fun tujuan(){
         }
     }
 }
+
 
 
 
