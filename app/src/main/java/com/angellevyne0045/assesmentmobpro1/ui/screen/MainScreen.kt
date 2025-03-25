@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,6 +60,8 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
         Gender("Wanita", R.drawable.woman),
     )
     var pilihGender by remember { mutableStateOf(gender) }
+    var pilihlevel by rememberSaveable { mutableStateOf("") }
+
 
     Column(
         modifier = modifier
@@ -74,10 +77,16 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(150.dp)
         )
+
         Text(
             text = stringResource(id = R.string.bmr_intro),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.fillMaxWidth()
+        )
+
+        LevelAktifitas(
+            selectedText = pilihlevel,
+            onTextSelected = { pilihlevel = it },
         )
 
         OutlinedTextField(
@@ -165,6 +174,47 @@ fun GenderOption(label: String, imageResId: Int, isSelected: Boolean, modifier: 
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(40.dp)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LevelAktifitas(selectedText: String, onTextSelected: (String) -> Unit) {
+    val list = listOf("Tidak Aktif", "Aktivitas Ringan", "Aktivitas Sedang", "Aktivitas Berat", "Aktifitas Sangat Berat")
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = isExpanded,
+            onExpandedChange = { isExpanded = !isExpanded }
+        ) {
+            TextField(
+                modifier = Modifier.menuAnchor(),
+                value = selectedText,
+                label = { Text(text = stringResource(R.string.level_aktifitas)) },
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) }
+            )
+
+            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
+                list.forEachIndexed { _, text ->
+                    DropdownMenuItem(
+                        text = { Text(text = text) },
+                        onClick = {
+                            onTextSelected(text)
+                            isExpanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    )
+                }
+            }
+        }
     }
 }
 

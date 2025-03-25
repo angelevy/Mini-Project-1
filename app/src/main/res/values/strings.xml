@@ -2,7 +2,8 @@
     <string name="app_name">Assesment Mobpro 1</string>
     <string name="kalori">Kalori</string>
     <string name="bmr_intro">Aplikasi Hitung Kalori Harian membantumu mengetahui berapa banyak
-         kalori yang masuk setiap hari. Biar makan tetap terkontrol dan sehat. Coba sekarang!</string>
+         kalori yang masuk setiap hari. Biar makan tetap terkontrol dan sehat. Coba sekarang!\n</string>
+    <string name="level_aktifitas">Level Aktifitas</string>
     <string name="usia">Usia</string>
     <string name="berat_badan">Berat Badan</string>
     <string name="tinggi_badan">Tinggi badan</string>
