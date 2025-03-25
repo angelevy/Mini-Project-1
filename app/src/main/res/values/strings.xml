@@ -11,4 +11,5 @@
     <string name="pria">Pria</string>
     <string name="wanita">Wanita</string>
     <string name="hitung">Hitung</string>
+    <string name="bmr">Kamu membutuhkan\n%1$.2f\nKalori/Hari</string>
 </resources>

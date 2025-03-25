@@ -3,15 +3,39 @@ package com.angellevyne0045.assesmentmobpro1.ui.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -60,7 +84,10 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
         Gender("Wanita", R.drawable.woman),
     )
     var pilihGender by remember { mutableStateOf(gender) }
-    var pilihlevel by rememberSaveable { mutableStateOf("") }
+    var pilihlevel by remember { mutableStateOf("") }
+
+    var bmr by remember { mutableFloatStateOf(0f) }
+
 
 
     Column(
@@ -151,11 +178,29 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
         }
 
         Button(
-            onClick = {},
+            onClick = {
+                bmr = hitungKalori(
+                    usia = usia.toFloat(),
+                    berat = berat.toFloat(),
+                    tinggi = tinggi.toFloat(),
+                    isMale = gender == radioOptions[0],
+                    aktivitas = pilihlevel
+                )
+            },
             modifier = Modifier.padding(top = 8.dp),
             contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
         ) {
             Text(text = stringResource(R.string.hitung))
+        }
+        if (bmr != 0f) {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
+            Text(
+                text = stringResource(R.string.bmr, bmr),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
     }
 }
@@ -175,6 +220,24 @@ fun GenderOption(label: String, imageResId: Int, isSelected: Boolean, modifier: 
             modifier = Modifier.size(40.dp)
         )
     }
+}
+
+private fun hitungKalori(usia: Float, berat: Float, tinggi: Float, isMale: Boolean, aktivitas: String): Float {
+    val bmr = if (isMale) {
+        66 + (13.7f * berat) + (5f * tinggi) - (6.8f * usia)
+    } else {
+        655 + (9.6f * berat) + (1.8f * tinggi) - (4.7f * usia)
+    }
+
+    val faktorAktivitas = when (aktivitas) {
+        "Tidak Aktif" -> 1.2f
+        "Aktivitas Ringan" -> 1.375f
+        "Aktivitas Sedang" -> 1.55f
+        "Aktivitas Berat" -> 1.72f
+        "Aktivitas Sangat Berat" -> 1.9f
+        else -> 1.2f
+    }
+    return bmr * faktorAktivitas
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
