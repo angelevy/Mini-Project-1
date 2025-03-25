@@ -12,4 +12,6 @@
     <string name="wanita">Wanita</string>
     <string name="hitung">Hitung</string>
     <string name="bmr">Kamu membutuhkan\n%1$.2f\nKalori/Hari</string>
+    <string name="input_invalid">Tidak Boleh Kosong</string>
+
 </resources>

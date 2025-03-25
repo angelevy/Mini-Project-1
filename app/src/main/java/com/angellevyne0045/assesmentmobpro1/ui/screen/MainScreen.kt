@@ -16,12 +16,15 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -76,15 +79,23 @@ fun MainScreen() {
 @Composable
 fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
     var usia by remember { mutableStateOf("") }
+    var usiaError by remember { mutableStateOf(false) }
+
     var berat by remember { mutableStateOf("") }
+    var beratError by remember { mutableStateOf(false) }
+
     var tinggi by remember { mutableStateOf("") }
+    var tinggiError by remember { mutableStateOf(false) }
 
     val radioOptions = listOf(
         Gender("Pria", R.drawable.man),
         Gender("Wanita", R.drawable.woman),
     )
     var pilihGender by remember { mutableStateOf(gender) }
+
     var pilihlevel by remember { mutableStateOf("") }
+    var pilihLevelError by remember { mutableStateOf(false) }
+
 
     var bmr by remember { mutableFloatStateOf(0f) }
 
@@ -120,7 +131,9 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             value = usia,
             onValueChange = { usia = it },
             label = { Text(text = stringResource(R.string.usia)) },
-            trailingIcon = { Text(text = "Tahun", modifier = Modifier.padding(16.dp)) },
+            trailingIcon = { IconPicker(usiaError, "Tahun ") },
+            supportingText = { ErrorHint(usiaError) },
+            isError = usiaError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -128,12 +141,13 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             ),
             modifier = Modifier.fillMaxWidth()
         )
-
         OutlinedTextField(
             value = berat,
             onValueChange = { berat = it },
             label = { Text(text = stringResource(R.string.berat_badan)) },
-            trailingIcon = { Text(text = "Kg") },
+            trailingIcon = { IconPicker(beratError, "Kg") },
+            supportingText = { ErrorHint(beratError) },
+            isError = beratError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -141,16 +155,17 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             ),
             modifier = Modifier.fillMaxWidth()
         )
-
         OutlinedTextField(
             value = tinggi,
             onValueChange = { tinggi = it },
             label = { Text(text = stringResource(R.string.tinggi_badan)) },
-            trailingIcon = { Text(text = "Cm") },
+            trailingIcon = { IconPicker(tinggiError, "Cm") },
+            supportingText = { ErrorHint(tinggiError) },
+            isError = tinggiError,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -179,6 +194,12 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
+                pilihLevelError = (pilihlevel == "" || pilihlevel == "0")
+                usiaError = (usia == "" || usia == "0")
+                beratError = (berat == "" || berat == "0")
+                tinggiError = (tinggi == "" || tinggi == "0")
+                if (usiaError || beratError || tinggiError) return@Button
+
                 bmr = hitungKalori(
                     usia = usia.toFloat(),
                     berat = berat.toFloat(),
@@ -219,6 +240,22 @@ fun GenderOption(label: String, imageResId: Int, isSelected: Boolean, modifier: 
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(40.dp)
         )
+    }
+}
+
+@Composable
+fun IconPicker(isError: Boolean, unit: String) {
+    if (isError) {
+        Icon(imageVector = Icons.Filled.Warning, contentDescription = null)
+    } else {
+        Text(text = unit)
+    }
+}
+
+@Composable
+fun ErrorHint(isError: Boolean) {
+    if (isError) {
+        Text(text = stringResource(R.string.input_invalid))
     }
 }
 
