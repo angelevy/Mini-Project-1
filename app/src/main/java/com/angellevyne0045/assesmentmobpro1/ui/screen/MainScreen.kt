@@ -1,5 +1,7 @@
 package com.angellevyne0045.assesmentmobpro1.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -46,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -108,13 +111,15 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
         Gender("Pria", R.drawable.man),
         Gender("Wanita", R.drawable.woman),
     )
-    var pilihGender by rememberSaveable { mutableStateOf(gender) }
+    var pilihGender by remember { mutableStateOf(gender) }
 
     var pilihlevel by rememberSaveable { mutableStateOf("") }
     var pilihLevelError by rememberSaveable { mutableStateOf(false) }
 
 
     var bmr by rememberSaveable { mutableFloatStateOf(0f) }
+
+    val context = LocalContext.current
 
 
 
@@ -148,7 +153,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             value = usia,
             onValueChange = { usia = it },
             label = { Text(text = stringResource(R.string.usia)) },
-            trailingIcon = { IconPicker(usiaError, "Tahun ") },
+            trailingIcon = { IconPicker(usiaError, "Tahun   ") },
             supportingText = { ErrorHint(usiaError) },
             isError = usiaError,
             singleLine = true,
@@ -239,6 +244,21 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
                 text = stringResource(R.string.bmr, bmr),
                 style = MaterialTheme.typography.titleLarge
             )
+            Button(
+                onClick = {
+                    shareData(
+                        context = context,
+                        message = context.getString(
+                            R.string.bagikan_template,
+                            pilihlevel, usia, berat, tinggi, pilihGender, bmr
+                        )
+                    )
+                },
+                modifier = Modifier.padding(top = 8.dp),
+                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+            ) {
+                Text(text = stringResource(R.string.bagikan))
+            }
         }
     }
 }
@@ -332,6 +352,16 @@ fun LevelAktifitas(selectedText: String, onTextSelected: (String) -> Unit) {
                 }
             }
         }
+    }
+}
+
+private fun shareData(context: Context, message: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT,message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
     }
 }
 

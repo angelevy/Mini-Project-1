@@ -19,5 +19,7 @@
          berat badan, tinggi badan, dan aktivitas. Aplikasi ini dibuat untuk Mini Project 1 kelas Pemrograman Perangkat Bergerak 1.\n\nAplikasi ini dibuat untuk Mini Project 1 kelas
          Pemrograman untuk Perangkat Bergerak 1.\n\nCopyright © 2024-2025 Angel Levyne.\nAll rights reserved</string>
     <string name="kembali">Kembali</string>
-
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">
+        Level Aktifitas: %1$s\nUsia: %2$s\nBerat badan: %3$s Kg\nTinggi badan: %4$s cm\nJenis kelamin: %5$s\n\nBMR: %6$.2f Kalori/Hari</string>
 </resources>
