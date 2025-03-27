@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,26 +95,26 @@ fun MainScreen(navController: NavHostController) {
 
 @Composable
 fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
-    var usia by remember { mutableStateOf("") }
-    var usiaError by remember { mutableStateOf(false) }
+    var usia by rememberSaveable { mutableStateOf("") }
+    var usiaError by rememberSaveable { mutableStateOf(false) }
 
-    var berat by remember { mutableStateOf("") }
-    var beratError by remember { mutableStateOf(false) }
+    var berat by rememberSaveable { mutableStateOf("") }
+    var beratError by rememberSaveable { mutableStateOf(false) }
 
-    var tinggi by remember { mutableStateOf("") }
-    var tinggiError by remember { mutableStateOf(false) }
+    var tinggi by rememberSaveable { mutableStateOf("") }
+    var tinggiError by rememberSaveable { mutableStateOf(false) }
 
     val radioOptions = listOf(
         Gender("Pria", R.drawable.man),
         Gender("Wanita", R.drawable.woman),
     )
-    var pilihGender by remember { mutableStateOf(gender) }
+    var pilihGender by rememberSaveable { mutableStateOf(gender) }
 
-    var pilihlevel by remember { mutableStateOf("") }
-    var pilihLevelError by remember { mutableStateOf(false) }
+    var pilihlevel by rememberSaveable { mutableStateOf("") }
+    var pilihLevelError by rememberSaveable { mutableStateOf(false) }
 
 
-    var bmr by remember { mutableFloatStateOf(0f) }
+    var bmr by rememberSaveable { mutableFloatStateOf(0f) }
 
 
 
