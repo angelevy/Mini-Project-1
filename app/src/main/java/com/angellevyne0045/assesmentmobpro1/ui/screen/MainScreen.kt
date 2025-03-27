@@ -178,7 +178,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             radioOptions.forEach { genderOption ->
                 GenderOption(
                     label = genderOption.nama,
-                    imageResId = genderOption.imageResId,
+                    imageResId = genderOption.imagesResId,
                     isSelected = pilihGender == genderOption,
                     modifier = Modifier
                         .selectable(
