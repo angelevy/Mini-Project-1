@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Assesment Mobpro 1</string>
+    <string name="kalori">Kalori</string>
+    <string name="bmr_intro">Aplikasi Hitung Kalori Harian membantumu mengetahui berapa banyak  kalori yang masuk setiap hari. Biar makan tetap terkontrol dan sehat. Coba sekarang!</string>
+    <string name="level_aktifitas">Level Aktifitas</string>
+    <string name="tidak_aktif">Tidak Aktif</string>
+    <string name="aktivitas_ringan">Aktivitas Ringan</string>
+    <string name="aktivitas_sedang">Aktivitas Sedang</string>
+    <string name="aktivitas_berat">Aktivitas Berat</string>
+    <string name="aktivitas_sangat_berat">Aktivitas Sangat Berat</string>
+    <string name="usia">Usia</string>
+    <string name="years">Tahun</string>
+    <string name="berat_badan">Berat Badan</string>
+    <string name="kg">Kg</string>
+    <string name="tinggi_badan">"Tinggi Badan "</string>
+    <string name="cm">Cm</string>
+    <string name="pria">Pria</string>
+    <string name="wanita">" Wanita"</string>
+    <string name="hitung">Hitung</string>
+    <string name="bmr">Kamu membutuhkan\n%1$.2f\nKalori/Hari</string>
+    <string name="input_invalid">Tidak Boleh Kosong</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="copyright">Hitung Kalori adalah aplikasi Android untuk menghitung kebutuhan kalori harian berdasarkan usia, jenis kelamin, berat badan, tinggi badan, dan aktivitas. Aplikasi ini dibuat untuk Mini Project 1 kelas Pemrograman Perangkat Bergerak 1.\n\nAplikasi ini dibuat untuk Mini Project 1 kelas Pemrograman untuk Perangkat Bergerak 1.\n\nCopyright © 2024–2025 Angel Levyne.\nAll rights reserved</string>
+    <string name="kembali">Kembali</string>
+    <string name="bagikan">Bagikan</string>
+    <string name="bagikan_template">Level Aktifitas: %1$s\nUsia: %2$s\nBerat badan: %3$s Kg\nTinggi badan: %4$s cm\nJenis kelamin: %5$s\n\nBMR: %6$.2f Kalori/Hari</string>
+</resources>

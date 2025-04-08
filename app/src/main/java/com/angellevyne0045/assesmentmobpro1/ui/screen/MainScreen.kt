@@ -67,8 +67,8 @@ import com.angellevyne0045.assesmentmobpro1.ui.theme.AssesmentMobpro1Theme
 @Composable
 fun MainScreen(navController: NavHostController) {
     val data = listOf(
-        Gender("Man", R.drawable.man),
-        Gender("Woman", R.drawable.woman),
+        Gender(stringResource(R.string.pria), R.drawable.man),
+        Gender(stringResource(R.string.wanita), R.drawable.woman),
     )
     Scaffold(
         topBar = {
@@ -108,8 +108,8 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
     var tinggiError by rememberSaveable { mutableStateOf(false) }
 
     val radioOptions = listOf(
-        Gender("Pria", R.drawable.man),
-        Gender("Wanita", R.drawable.woman),
+        Gender(stringResource(R.string.pria), R.drawable.man),
+        Gender(stringResource(R.string.wanita), R.drawable.woman),
     )
     var pilihGender by remember { mutableStateOf(gender) }
 
@@ -153,7 +153,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             value = usia,
             onValueChange = { usia = it },
             label = { Text(text = stringResource(R.string.usia)) },
-            trailingIcon = { IconPicker(usiaError, "Tahun   ") },
+            trailingIcon = { IconPicker(usiaError, stringResource(R.string.years)) },
             supportingText = { ErrorHint(usiaError) },
             isError = usiaError,
             singleLine = true,
@@ -167,7 +167,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             value = berat,
             onValueChange = { berat = it },
             label = { Text(text = stringResource(R.string.berat_badan)) },
-            trailingIcon = { IconPicker(beratError, "Kg") },
+            trailingIcon = { IconPicker(beratError, stringResource(R.string.kg)) },
             supportingText = { ErrorHint(beratError) },
             isError = beratError,
             singleLine = true,
@@ -181,7 +181,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
             value = tinggi,
             onValueChange = { tinggi = it },
             label = { Text(text = stringResource(R.string.tinggi_badan)) },
-            trailingIcon = { IconPicker(tinggiError, "Cm") },
+            trailingIcon = { IconPicker(tinggiError, stringResource(R.string.cm)) },
             supportingText = { ErrorHint(tinggiError) },
             isError = tinggiError,
             singleLine = true,
@@ -250,7 +250,7 @@ fun ScreenContent(gender: Gender, modifier: Modifier = Modifier) {
                         context = context,
                         message = context.getString(
                             R.string.bagikan_template,
-                            pilihlevel, usia, berat, tinggi, pilihGender, bmr
+                            pilihlevel, usia, berat, tinggi, pilihGender.nama, bmr
                         )
                     )
                 },
@@ -317,7 +317,12 @@ private fun hitungKalori(usia: Float, berat: Float, tinggi: Float, isMale: Boole
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelAktifitas(selectedText: String, onTextSelected: (String) -> Unit) {
-    val list = listOf("Tidak Aktif", "Aktivitas Ringan", "Aktivitas Sedang", "Aktivitas Berat", "Aktifitas Sangat Berat")
+    val list = listOf(
+        stringResource(R.string.tidak_aktif),
+        stringResource(R.string.aktivitas_ringan),
+        stringResource(R.string.aktivitas_sedang),
+        stringResource(R.string.aktivitas_berat),
+        stringResource(R.string.aktivitas_sangat_berat))
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
